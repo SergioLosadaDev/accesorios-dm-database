@@ -54,3 +54,17 @@ databaseChangeLog:
             path: ../../../05_rollbacks/01_ddl/03_tables/004_create_imagen_producto_table.rollback.sql
             relativeToChangelogFile: true
             splitStatements: true
+
+  - changeSet:
+      id: 005_create_promociones_tables
+      author: JSA
+      changes:
+        - sqlFile:
+            path: 005_create_promociones_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+      rollback:
+        - sqlFile:
+            path: ../../../05_rollbacks/01_ddl/03_tables/005_create_promociones_tables.rollback.sql
+            relativeToChangelogFile: true
+            splitStatements: true
