@@ -15,6 +15,26 @@ services:
     networks:
       - accesorios-network-dev
 
+  liquibase:
+    build:
+      context: ./docker/liquibase
+      dockerfile: Dockerfile
+    container_name: accesorios-dm-liquibase-dev
+    depends_on:
+      - postgres
+    environment:
+      LIQUIBASE_URL: jdbc:postgresql://postgres:5432/accesorios_dm_db
+      LIQUIBASE_USERNAME: admin
+      LIQUIBASE_PASSWORD: admin123
+      LIQUIBASE_CHANGELOG: changelog-master.yaml
+    volumes:
+      - ./:/liquibase/changelog
+    command: >
+      sh -c "sleep 5 && 
+             liquibase update"
+    networks:
+      - accesorios-network-dev
+
 volumes:
   postgres_dev_data:
 
