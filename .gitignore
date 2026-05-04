@@ -1,6 +1,8 @@
 # Docker
 .env
 *.log
+docker-compose.override.yml
+docker-compose.local.yml
 
 # Liquibase - archivos locales (no se versionan)
 liquibase.properties
@@ -18,5 +20,3 @@ Thumbs.db
 
 # Temp files
 .tmp/
-*.sql
-!*.sql

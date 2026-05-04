@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create_security_tables
+      author: JSA
+      changes:
+        - sqlFile:
+            path: 001_create_security_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+      rollback:
+        - sqlFile:
+            path: ../../../05_rollbacks/01_ddl/03_tables/001_create_security_tables.rollback.sql
+            relativeToChangelogFile: true
+            splitStatements: true
