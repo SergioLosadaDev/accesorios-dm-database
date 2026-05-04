@@ -2,8 +2,9 @@
 .env
 *.log
 
-# Liquibase
+# Liquibase - archivos locales (no se versionan)
 liquibase.properties
+liquibase.properties.*
 *.tmp
 
 # IDE
