@@ -5,7 +5,11 @@
 docker-compose.override.yml
 docker-compose.local.yml
 
+<<<<<<< HEAD
+# Liquibase - Ya no usamos archivo de propiedades
+=======
 # Liquibase - archivos locales (no se versionan)
+>>>>>>> develop
 liquibase.properties
 liquibase.properties.*
 *.tmp
@@ -20,7 +24,15 @@ liquibase.properties.*
 Thumbs.db
 
 # Temp files
+<<<<<<< HEAD
+<<<<<<< HEAD
+.tmp/
+=======
+.tmp/
+>>>>>>> develop
+=======
 .tmp/
 
 # Temp files
 .tmp/
+>>>>>>> develop
