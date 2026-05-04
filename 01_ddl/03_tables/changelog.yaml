@@ -82,3 +82,17 @@ databaseChangeLog:
             path: ../../../05_rollbacks/01_ddl/03_tables/006_create_carrito_tables.rollback.sql
             relativeToChangelogFile: true
             splitStatements: true
+
+  - changeSet:
+      id: 007_create_pedidos_tables
+      author: JSA
+      changes:
+        - sqlFile:
+            path: 007_create_pedidos_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+      rollback:
+        - sqlFile:
+            path: ../../../05_rollbacks/01_ddl/03_tables/007_create_pedidos_tables.rollback.sql
+            relativeToChangelogFile: true
+            splitStatements: true
