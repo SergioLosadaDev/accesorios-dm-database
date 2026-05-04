@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: accesorios-dm-postgres-dev
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: accesorios_dm_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - accesorios-network-dev
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  accesorios-network-dev:
+    driver: bridge
