@@ -19,21 +19,20 @@ services:
       retries: 5
 
   liquibase:
-    build:
-      context: ./docker/liquibase
-      dockerfile: Dockerfile
+    image: liquibase/liquibase:4.25-alpine
     container_name: accesorios-dm-liquibase-prod
     depends_on:
       postgres:
         condition: service_healthy
-    environment:
-      LIQUIBASE_URL: jdbc:postgresql://postgres:5432/accesorios_dm_db
-      LIQUIBASE_USERNAME: admin
-      LIQUIBASE_PASSWORD: ${DB_PASSWORD}
-      LIQUIBASE_CHANGELOG: changelog-master.yaml
     volumes:
       - ./:/liquibase/changelog
-    command: liquibase update
+    working_dir: /liquibase/changelog
+    command: >
+      liquibase update
+      --url=jdbc:postgresql://postgres:5432/accesorios_dm_db
+      --username=admin
+      --password=${DB_PASSWORD}
+      --changelog-file=changelog-master.yaml
     networks:
       - accesorios-network-prod
 
