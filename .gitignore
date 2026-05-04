@@ -1,0 +1,61 @@
+# =========================
+# Docker / PostgreSQL
+# =========================
+
+# Volúmenes de base de datos (MUY IMPORTANTE ignorar)
+pgdata/
+postgres-data/
+db-data/
+data/
+*.db
+*.sqlite
+
+# Archivos generados por contenedores
+docker-compose.override.yml
+.env
+.env.*
+*.log
+
+# Archivos temporales de PostgreSQL
+*.pid
+*.sock
+
+# Backups locales
+*.sql
+*.dump
+*.backup
+
+# =========================
+# Sistema operativo
+# =========================
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# =========================
+# IDEs / Editores
+# =========================
+
+# VS Code
+.vscode/
+
+# IntelliJ / JetBrains
+.idea/
+*.iml
+
+# =========================
+# Otros
+# =========================
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp
+
+# Logs
+logs/
+*.log
