@@ -4,7 +4,7 @@
 -- =====================================================
 
 -- =====================================================
--- 1. ROLES (security.rol)
+-- 1. ROLES (security.rol) - Tiene UNIQUE en nombre
 -- =====================================================
 INSERT INTO security.rol (nombre, descripcion) VALUES
     ('ADMIN', 'Administrador del sistema - Acceso total'),
@@ -14,7 +14,7 @@ INSERT INTO security.rol (nombre, descripcion) VALUES
 ON CONFLICT (nombre) DO NOTHING;
 
 -- =====================================================
--- 2. ESTADOS DE PEDIDO (logistica.estado_pedido)
+-- 2. ESTADOS DE PEDIDO (logistica.estado_pedido) - Tiene UNIQUE en nombre
 -- =====================================================
 INSERT INTO logistica.estado_pedido (nombre, descripcion) VALUES
     ('PENDIENTE', 'Pedido creado, esperando confirmación de pago'),
@@ -25,7 +25,7 @@ INSERT INTO logistica.estado_pedido (nombre, descripcion) VALUES
 ON CONFLICT (nombre) DO NOTHING;
 
 -- =====================================================
--- 3. TIPOS DE MOVIMIENTO DE INVENTARIO (inventario.tipo_movimiento)
+-- 3. TIPOS DE MOVIMIENTO DE INVENTARIO (inventario.tipo_movimiento) - Tiene UNIQUE en nombre
 -- =====================================================
 INSERT INTO inventario.tipo_movimiento (nombre, descripcion) VALUES
     ('ENTRADA', 'Ingreso de productos al inventario (compras, devoluciones)'),
@@ -34,7 +34,7 @@ INSERT INTO inventario.tipo_movimiento (nombre, descripcion) VALUES
 ON CONFLICT (nombre) DO NOTHING;
 
 -- =====================================================
--- 4. MATERIALES BASE (catalogo.material)
+-- 4. MATERIALES BASE (catalogo.material) - Tiene UNIQUE en nombre
 -- =====================================================
 INSERT INTO catalogo.material (nombre, descripcion) VALUES
     ('Oro 18K', 'Oro de 18 quilates - Alta pureza'),
@@ -47,7 +47,7 @@ INSERT INTO catalogo.material (nombre, descripcion) VALUES
 ON CONFLICT (nombre) DO NOTHING;
 
 -- =====================================================
--- 5. CATEGORÍAS BASE (catalogo.categoria)
+-- 5. CATEGORÍAS BASE (catalogo.categoria) - Tiene UNIQUE en nombre
 -- =====================================================
 INSERT INTO catalogo.categoria (nombre, descripcion, estado) VALUES
     ('Anillos', 'Anillos en diferentes estilos y materiales', TRUE),
@@ -60,93 +60,48 @@ INSERT INTO catalogo.categoria (nombre, descripcion, estado) VALUES
 ON CONFLICT (nombre) DO NOTHING;
 
 -- =====================================================
--- 6. PRODUCTOS DE EJEMPLO (catalogo.producto)
+-- 6. PRODUCTOS DE EJEMPLO (catalogo.producto) - NO tiene UNIQUE en nombre
+-- Usamos DO NOTHING sin ON CONFLICT (verificamos existencia manualmente)
 -- =====================================================
--- Nota: Los IDs se asignan automáticamente, usamos subconsultas para los FK
-INSERT INTO catalogo.producto (nombre, descripcion, precio, stock, estado, id_categoria, id_material) VALUES
-    (
-        'Anillo de compromiso Oro 18K', 
-        'Anillo de compromiso con diamante central, acabado brillante', 
-        2500000.00, 
-        5, 
-        TRUE, 
-        (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Anillos'),
-        (SELECT id_material FROM catalogo.material WHERE nombre = 'Oro 18K')
-    ),
-    (
-        'Collar de Perlas Plata 925', 
-        'Collar de perlas cultivadas con cierre de plata 925', 
-        850000.00, 
-        10, 
-        TRUE, 
-        (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Collares'),
-        (SELECT id_material FROM catalogo.material WHERE nombre = 'Plata 925')
-    ),
-    (
-        'Pulsera de Acero Inoxidable', 
-        'Pulsera estilo eslabón, acero inoxidable color plata', 
-        150000.00, 
-        25, 
-        TRUE, 
-        (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Pulseras'),
-        (SELECT id_material FROM catalogo.material WHERE nombre = 'Acero Inoxidable')
-    ),
-    (
-        'Aretes de Oro 14K', 
-        'Aretes tipo aro, oro 14K, tamaño pequeño', 
-        450000.00, 
-        15, 
-        TRUE, 
-        (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Aretes'),
-        (SELECT id_material FROM catalogo.material WHERE nombre = 'Oro 14K')
-    ),
-    (
-        'Dije de Corazón Plata 925', 
-        'Dije de corazón en plata 925 con grabado', 
-        89000.00, 
-        30, 
-        TRUE, 
-        (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Dijes'),
-        (SELECT id_material FROM catalogo.material WHERE nombre = 'Plata 925')
-    ),
-    (
-        'Anillo de Plata Ley', 
-        'Anillo de plata de ley con piedra lunar', 
-        320000.00, 
-        20, 
-        TRUE, 
-        (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Anillos'),
-        (SELECT id_material FROM catalogo.material WHERE nombre = 'Plata de Ley')
-    ),
-    (
-        'Collar de Titanio Hombre', 
-        'Collar de cadena gruesa en titanio para hombre', 
-        250000.00, 
-        12, 
-        TRUE, 
-        (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Collares'),
-        (SELECT id_material FROM catalogo.material WHERE nombre = 'Titanio')
-    ),
-    (
-        'Pulsera de Cobre Energía', 
-        'Pulsera magnética de cobre para energía', 
-        120000.00, 
-        18, 
-        TRUE, 
-        (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Pulseras'),
-        (SELECT id_material FROM catalogo.material WHERE nombre = 'Cobre')
-    )
-ON CONFLICT (nombre) DO NOTHING;
+INSERT INTO catalogo.producto (nombre, descripcion, precio, stock, estado, id_categoria, id_material)
+SELECT * FROM (
+    VALUES
+        ('Anillo de compromiso Oro 18K', 'Anillo de compromiso con diamante central, acabado brillante', 2500000.00, 5, TRUE, 
+         (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Anillos'),
+         (SELECT id_material FROM catalogo.material WHERE nombre = 'Oro 18K')),
+        ('Collar de Perlas Plata 925', 'Collar de perlas cultivadas con cierre de plata 925', 850000.00, 10, TRUE,
+         (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Collares'),
+         (SELECT id_material FROM catalogo.material WHERE nombre = 'Plata 925')),
+        ('Pulsera de Acero Inoxidable', 'Pulsera estilo eslabón, acero inoxidable color plata', 150000.00, 25, TRUE,
+         (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Pulseras'),
+         (SELECT id_material FROM catalogo.material WHERE nombre = 'Acero Inoxidable')),
+        ('Aretes de Oro 14K', 'Aretes tipo aro, oro 14K, tamaño pequeño', 450000.00, 15, TRUE,
+         (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Aretes'),
+         (SELECT id_material FROM catalogo.material WHERE nombre = 'Oro 14K')),
+        ('Dije de Corazón Plata 925', 'Dije de corazón en plata 925 con grabado', 89000.00, 30, TRUE,
+         (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Dijes'),
+         (SELECT id_material FROM catalogo.material WHERE nombre = 'Plata 925')),
+        ('Anillo de Plata Ley', 'Anillo de plata de ley con piedra lunar', 320000.00, 20, TRUE,
+         (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Anillos'),
+         (SELECT id_material FROM catalogo.material WHERE nombre = 'Plata de Ley')),
+        ('Collar de Titanio Hombre', 'Collar de cadena gruesa en titanio para hombre', 250000.00, 12, TRUE,
+         (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Collares'),
+         (SELECT id_material FROM catalogo.material WHERE nombre = 'Titanio')),
+        ('Pulsera de Cobre Energía', 'Pulsera magnética de cobre para energía', 120000.00, 18, TRUE,
+         (SELECT id_categoria FROM catalogo.categoria WHERE nombre = 'Pulseras'),
+         (SELECT id_material FROM catalogo.material WHERE nombre = 'Cobre'))
+) AS v(nombre, descripcion, precio, stock, estado, id_categoria, id_material)
+WHERE NOT EXISTS (SELECT 1 FROM catalogo.producto p WHERE p.nombre = v.nombre);
 
 -- =====================================================
--- 7. CLIENTE DE EJEMPLO (clientes.cliente)
+-- 7. CLIENTE DE EJEMPLO (clientes.cliente) - Tiene UNIQUE en correo
 -- =====================================================
 INSERT INTO clientes.cliente (nombre, correo, telefono) VALUES
     ('Cliente Demo', 'demo@accesoriosdm.com', '3001234567')
 ON CONFLICT (correo) DO NOTHING;
 
 -- =====================================================
--- 8. EMPLEADO ADMIN (security.empleado)
+-- 8. EMPLEADO ADMIN (security.empleado) - Tiene UNIQUE en correo
 -- Nota: La contraseña en producción debe ser encriptada con bcrypt
 -- Por ahora usamos un hash de ejemplo para 'admin123'
 -- =====================================================
