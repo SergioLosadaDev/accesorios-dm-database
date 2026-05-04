@@ -8,8 +8,4 @@ USER liquibase
 WORKDIR /liquibase/changelog
 
 # Liquibase usará las variables de entorno automáticamente:
-<<<<<<< HEAD
 # LIQUIBASE_URL, LIQUIBASE_USERNAME, LIQUIBASE_PASSWORD, LIQUIBASE_CHANGELOG
-=======
-# LIQUIBASE_URL, LIQUIBASE_USERNAME, LIQUIBASE_PASSWORD, LIQUIBASE_CHANGELOGFILE
->>>>>>> develop
