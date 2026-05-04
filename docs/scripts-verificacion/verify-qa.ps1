@@ -71,6 +71,26 @@ $TOTAL_TABLAS = docker exec -it $CONTAINER psql -U $USER -d $DB -t -c "SELECT CO
 Write-Host "📊 Total de tablas en la base de datos: $TOTAL_TABLAS" -ForegroundColor Green
 
 Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "10. VERIFICANDO DATOS INICIALES" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+
+Write-Host "📋 Roles:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_rol, nombre FROM security.rol;"
+
+Write-Host "📋 Estados de Pedido:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_estado, nombre FROM logistica.estado_pedido;"
+
+Write-Host "📋 Tipos de Movimiento:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_tipo_movimiento, nombre FROM inventario.tipo_movimiento;"
+
+Write-Host "📋 Productos Demo (primeros 5):" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_producto, nombre, precio FROM catalogo.producto LIMIT 5;"
+
+Write-Host "📊 Total de productos:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT COUNT(*) as total_productos FROM catalogo.producto;"
+
+Write-Host ""
 Write-Host "========================================" -ForegroundColor Green
 Write-Host "✅ VERIFICACIÓN COMPLETADA - QA" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green

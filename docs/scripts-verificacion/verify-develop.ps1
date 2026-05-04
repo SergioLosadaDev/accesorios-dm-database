@@ -171,6 +171,35 @@ Write-Host "✅ inventario.inventario_movimiento - cantidad != 0" -ForegroundCol
 docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT conname FROM pg_constraint WHERE conrelid = 'inventario.inventario_movimiento'::regclass AND contype = 'c';"
 
 Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "13. VERIFICANDO DATOS INICIALES" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+
+Write-Host "📋 Roles:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_rol, nombre, descripcion FROM security.rol;"
+
+Write-Host "📋 Estados de Pedido:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_estado, nombre, descripcion FROM logistica.estado_pedido;"
+
+Write-Host "📋 Tipos de Movimiento:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_tipo_movimiento, nombre, descripcion FROM inventario.tipo_movimiento;"
+
+Write-Host "📋 Materiales:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_material, nombre FROM catalogo.material;"
+
+Write-Host "📋 Categorías:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_categoria, nombre, estado FROM catalogo.categoria;"
+
+Write-Host "📋 Productos Demo:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_producto, nombre, precio, stock FROM catalogo.producto;"
+
+Write-Host "📋 Cliente Demo:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_cliente, nombre, correo FROM clientes.cliente WHERE correo = 'demo@accesoriosdm.com';"
+
+Write-Host "📋 Empleados:" -ForegroundColor Yellow
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_empleado, nombre, correo, id_rol FROM security.empleado;"
+
+Write-Host ""
 Write-Host "========================================" -ForegroundColor Green
 Write-Host "✅ VERIFICACIÓN COMPLETADA - DEVELOP" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
