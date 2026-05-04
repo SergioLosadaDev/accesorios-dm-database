@@ -1,7 +1,4 @@
 databaseChangeLog:
-  # Los inserts se agregarán en HUs futuras
-  - changeSet:
-      id: placeholder
-      author: JSA
-      changes:
-        - sql: SELECT 1;
+  - include:
+      file: 00_inserts/changelog.yaml
+      relativeToChangelogFile: true
