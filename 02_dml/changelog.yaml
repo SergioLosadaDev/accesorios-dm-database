@@ -1,0 +1,7 @@
+databaseChangeLog:
+  # Los inserts se agregarán en HUs futuras
+  - changeSet:
+      id: placeholder
+      author: JSA
+      changes:
+        - sql: SELECT 1;

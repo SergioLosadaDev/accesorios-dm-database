@@ -1,0 +1,15 @@
+# PostgreSQL Driver
+driver: org.postgresql.Driver
+
+# Connection URL - dev: jdbc:postgresql://localhost:5432/accesorios_dm_db
+url: jdbc:postgresql://localhost:5432/accesorios_dm_db
+
+# Credentials
+username: admin
+password: admin123
+
+# Changelog file
+changeLogFile: changelog-master.yaml
+
+# Logging
+logLevel: INFO
