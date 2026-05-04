@@ -1,8 +1,8 @@
 # verify-main.ps1
-# Script de verificación para ambiente MAIN (puerto 5434)
+# Script de verificacion para ambiente MAIN (puerto 5434)
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "VERIFICANDO BASE DE DATOS - MAIN (PRODUCCIÓN)" -ForegroundColor Cyan
+Write-Host "VERIFICANDO BASE DE DATOS - MAIN (PRODUCCION)" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -11,44 +11,44 @@ $CONTAINER = "accesorios-dm-postgres-prod"
 $DB = "accesorios_dm_db"
 $USER = "admin"
 
-Write-Host "📌 Verificando que el contenedor está corriendo..." -ForegroundColor Yellow
-docker ps --filter "name=$CONTAINER" --format "table {{.Names}}\t{{.Status}}"
+Write-Host "Verificando contenedor..." -ForegroundColor Yellow
+docker ps --filter "name=$CONTAINER"
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "1. VERIFICANDO SCHEMAS" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "1. SCHEMAS" -ForegroundColor Cyan
+Write-Host "========================================"
 docker exec -it $CONTAINER psql -U $USER -d $DB -c "\dn"
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "2. VERIFICANDO TABLAS PRINCIPALES" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "2. CONTEO DE TABLAS PRINCIPALES" -ForegroundColor Cyan
+Write-Host "========================================"
 
-Write-Host "📋 security.rol" -ForegroundColor Yellow
+Write-Host "Security.rol:"
 docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT COUNT(*) FROM security.rol;"
 
-Write-Host "📋 security.empleado" -ForegroundColor Yellow
-docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT COUNT(*) FROM security.empleado;"
-
-Write-Host "📋 clientes.cliente" -ForegroundColor Yellow
+Write-Host "Clientes.cliente:"
 docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT COUNT(*) FROM clientes.cliente;"
 
-Write-Host "📋 catalogo.producto" -ForegroundColor Yellow
+Write-Host "Catalogo.producto:"
 docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT COUNT(*) FROM catalogo.producto;"
 
-Write-Host "📋 ventas.pedido" -ForegroundColor Yellow
-docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT COUNT(*) FROM ventas.pedido;"
-
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "3. VERIFICANDO TOTAL DE TABLAS" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "3. DATOS INICIALES" -ForegroundColor Cyan
+Write-Host "========================================"
 
-$TOTAL_TABLAS = docker exec -it $CONTAINER psql -U $USER -d $DB -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema NOT IN ('information_schema', 'pg_catalog');"
-Write-Host "📊 Total de tablas en producción: $TOTAL_TABLAS" -ForegroundColor Green
+Write-Host "Roles:"
+docker exec -it $CONTAINER psql -U $USER -d $DB -c "SELECT id_rol, nombre FROM security.rol;"
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Green
-Write-Host "✅ VERIFICACIÓN COMPLETADA - MAIN" -ForegroundColor Green
-Write-Host "========================================" -ForegroundColor Green
+Write-Host "VERIFICACION COMPLETADA - MAIN" -ForegroundColor Green
+Write-Host "========================================"
+
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Yellow
+Write-Host "Presiona cualquier tecla para cerrar..." -ForegroundColor Yellow
+Write-Host "========================================" -ForegroundColor Yellow
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
