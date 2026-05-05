@@ -1,5 +1,5 @@
 -- =====================================================
--- POLÍTICAS DE SEGURIDAD RLS (Row Level Security)
+-- POLITICAS DE SEGURIDAD RLS (Row Level Security)
 -- =====================================================
 
 -- =====================================================
@@ -20,47 +20,23 @@ ALTER TABLE ventas.carrito ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ventas.item_carrito ENABLE ROW LEVEL SECURITY;
 
 -- =====================================================
--- 2. CREAR ROLES PARA LA APLICACIÓN
+-- 2. CREAR ROLES PARA LA APLICACION (sin DO para compatibilidad)
 -- =====================================================
 
 -- Rol para administradores (acceso total)
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'app_admin') THEN
-        CREATE ROLE app_admin;
-    END IF;
-END
-$$;
+CREATE ROLE app_admin;
 
 -- Rol para vendedores
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'app_vendedor') THEN
-        CREATE ROLE app_vendedor;
-    END IF;
-END
-$$;
+CREATE ROLE app_vendedor;
 
 -- Rol para clientes (solo ven sus propios datos)
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'app_cliente') THEN
-        CREATE ROLE app_cliente;
-    END IF;
-END
-$$;
+CREATE ROLE app_cliente;
 
 -- Rol para bodegueros (acceso a inventario)
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'app_bodeguero') THEN
-        CREATE ROLE app_bodeguero;
-    END IF;
-END
-$$;
+CREATE ROLE app_bodeguero;
 
 -- =====================================================
--- 3. POLÍTICAS PARA TABLA EMPLEADO
+-- 3. POLITICAS PARA TABLA EMPLEADO
 -- =====================================================
 
 -- Administradores: pueden ver todos los empleados
@@ -83,7 +59,7 @@ CREATE POLICY empleado_self_select ON security.empleado
     USING (correo = current_user);
 
 -- =====================================================
--- 4. POLÍTICAS PARA TABLA CLIENTE
+-- 4. POLITICAS PARA TABLA CLIENTE
 -- =====================================================
 
 -- Administradores y vendedores: pueden ver todos los clientes
@@ -98,7 +74,7 @@ CREATE POLICY cliente_self_select ON clientes.cliente
     TO app_cliente
     USING (correo = current_user);
 
--- Clientes: pueden actualizar su propia información
+-- Clientes: pueden actualizar su propia informacion
 CREATE POLICY cliente_self_update ON clientes.cliente
     FOR UPDATE
     TO app_cliente
@@ -113,7 +89,7 @@ CREATE POLICY cliente_admin_all ON clientes.cliente
     WITH CHECK (true);
 
 -- =====================================================
--- 5. POLÍTICAS PARA TABLA PEDIDO
+-- 5. POLITICAS PARA TABLA PEDIDO
 -- =====================================================
 
 -- Administradores y vendedores: pueden ver todos los pedidos
@@ -135,7 +111,7 @@ CREATE POLICY pedido_cliente_insert ON ventas.pedido
     WITH CHECK (id_cliente IN (SELECT id_cliente FROM clientes.cliente WHERE correo = current_user));
 
 -- =====================================================
--- 6. POLÍTICAS PARA TABLA DETALLE_PEDIDO
+-- 6. POLITICAS PARA TABLA DETALLE_PEDIDO
 -- =====================================================
 
 -- Administradores y vendedores: pueden ver todos los detalles
@@ -154,7 +130,7 @@ CREATE POLICY detalle_cliente_select ON ventas.detalle_pedido
     ));
 
 -- =====================================================
--- 7. POLÍTICAS PARA TABLA CARRITO
+-- 7. POLITICAS PARA TABLA CARRITO
 -- =====================================================
 
 -- Clientes: solo ven su propio carrito activo
@@ -176,10 +152,10 @@ CREATE POLICY carrito_cliente_update ON ventas.carrito
     USING (id_cliente IN (SELECT id_cliente FROM clientes.cliente WHERE correo = current_user));
 
 -- =====================================================
--- 8. POLÍTICAS PARA TABLA ITEM_CARRITO
+-- 8. POLITICAS PARA TABLA ITEM_CARRITO
 -- =====================================================
 
--- Clientes: solo ven ítems de su carrito
+-- Clientes: solo ven items de su carrito
 CREATE POLICY item_carrito_cliente_select ON ventas.item_carrito
     FOR SELECT
     TO app_cliente
@@ -188,7 +164,7 @@ CREATE POLICY item_carrito_cliente_select ON ventas.item_carrito
         WHERE id_cliente IN (SELECT id_cliente FROM clientes.cliente WHERE correo = current_user) AND estado = 'activo'
     ));
 
--- Clientes: pueden agregar/eliminar ítems de su carrito
+-- Clientes: pueden agregar/eliminar items de su carrito
 CREATE POLICY item_carrito_cliente_all ON ventas.item_carrito
     FOR ALL
     TO app_cliente
@@ -202,7 +178,7 @@ CREATE POLICY item_carrito_cliente_all ON ventas.item_carrito
     ));
 
 -- =====================================================
--- 9. ASIGNAR PERMISOS BÁSICOS
+-- 9. ASIGNAR PERMISOS BASICOS
 -- =====================================================
 
 -- Conectar a la base de datos
@@ -220,12 +196,8 @@ GRANT USAGE ON SCHEMA inventario TO app_admin, app_bodeguero;
 -- =====================================================
 -- 10. NOTA IMPORTANTE
 -- =====================================================
--- Las políticas RLS requieren que la aplicación se conecte con el rol correspondiente:
+-- Las politicas RLS requieren que la aplicacion se conecte con el rol correspondiente:
 -- - app_admin: Usuarios con rol ADMIN
 -- - app_vendedor: Usuarios con rol VENDEDOR
 -- - app_bodeguero: Usuarios con rol BODEGUERO
 -- - app_cliente: Usuarios con rol CLIENTE
---
--- Ejemplo de conexión para un cliente:
--- psql -U app_cliente -d accesorios_dm_db
--- SET SESSION AUTHORIZATION 'cliente@email.com';
