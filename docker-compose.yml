@@ -29,7 +29,7 @@ services:
     working_dir: /liquibase/changelog
     command: >
       liquibase update
-      --url=jdbc:postgresql://postgres:5434/accesorios_dm_db
+      --url=jdbc:postgresql://postgres:5432/accesorios_dm_db
       --username=admin
       --password=admin123
       --changelog-file=changelog-master.yaml
