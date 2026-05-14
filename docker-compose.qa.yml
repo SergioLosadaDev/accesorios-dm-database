@@ -41,4 +41,5 @@ volumes:
 
 networks:
   accesorios-network-qa:
+    name: accesorios-dm-database_accesorios-network-qa
     driver: bridge
